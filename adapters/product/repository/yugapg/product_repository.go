@@ -9,12 +9,22 @@ type productRepository struct {
 	db *gorm.DB
 }
 
-func (p *productRepository) CreateMany(books []domain.Product) (interface{}, error) {
-	panic("implement me")
+func (p *productRepository) CreateMany(products []domain.Product) (interface{}, error) {
+	p.db.
+		Model(&domain.Product{}).
+		CreateInBatches(&products, 20)
+
+	return nil, p.db.Error
 }
 
 func (p *productRepository) Read() (interface{}, error) {
-	panic("implement me")
+	var products []domain.Product
+
+	p.db.
+		Model(&domain.Product{}).
+		Find(&products)
+
+	return products, p.db.Error
 }
 
 func (p *productRepository) Update(filter, update interface{}) (interface{}, error) {
@@ -29,7 +39,6 @@ func (p *productRepository) Delete(filter interface{}) (interface{}, error) {
 func New(db *gorm.DB) domain.ProductRepository {
 	return &productRepository{db}
 }
-
 
 //// Create ...
 //func (mb *mongoBookRepository) CreateMany(databaseName, collectionName string, books []domain.Book) (interface{}, error) {

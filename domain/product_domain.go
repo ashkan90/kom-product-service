@@ -14,7 +14,7 @@ type Product struct {
 
 // ProductRepository ...
 type ProductRepository interface {
-	CreateMany(books []Product) (interface{}, error)
+	CreateMany([]Product) (interface{}, error)
 	Read() (interface{}, error)
 	Update(filter, update interface{}) (interface{}, error)
 	Delete(filter interface{}) (interface{}, error)
@@ -24,6 +24,6 @@ type ProductRepository interface {
 type ProductUsecase interface {
 	InsertProduct([]Product) (interface{}, error)
 	ListProduct() (interface{}, error)
-	UpdateProduct(update Product) (interface{}, error)
+	UpdateProduct(Product) (interface{}, error)
 	DeleteProduct() (interface{}, error)
 }

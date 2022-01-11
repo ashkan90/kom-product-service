@@ -24,12 +24,12 @@ func New(e *echo.Echo, uc domain.ProductUsecase) {
 
 // Fetch will fetch the product based on given params
 func (p *ProductHandler) Fetch(c echo.Context) error {
-	listBook, err := p.ProductUsecase.ListProduct()
+	var products, err = p.ProductUsecase.ListProduct()
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	return c.JSON(http.StatusOK, listBook)
+	return c.JSON(http.StatusOK, products)
 }
 
 // StoreMany will store the books by given request body

@@ -2,7 +2,6 @@ package product_usecase
 
 import (
 	"kom-product-service/domain"
-	"time"
 )
 
 type productUsecase struct {
@@ -10,30 +9,11 @@ type productUsecase struct {
 }
 
 func (p *productUsecase) InsertProduct(products []domain.Product) (interface{}, error) {
-	panic("implement me")
+	return p.repo.CreateMany(products)
 }
 
 func (p *productUsecase) ListProduct() (interface{}, error) {
-	return []domain.Product{
-		{
-			ID:        1,
-			Title:     "Title field",
-			Detail:    domain.ProductDetail{
-				Active:    true,
-				Barcode:   "TIT-BR-0012",
-				Brand:     "Random Brand Name",
-				Image:     "the-source-of-image.com",
-				Name:      "Brand new product",
-			},
-			Prices: []domain.ProductPrice{
-				{Currency: "TRY", Value: 500.123},
-				{Currency: "USD", Value: 65.123},
-				{Currency: "EUR", Value: 45.123},
-			},
-			Inventory: 6,
-			CreatedAt: time.Now(),
-		},
-	}, nil
+	return p.repo.Read()
 }
 
 func (p *productUsecase) UpdateProduct(update domain.Product) (interface{}, error) {
@@ -50,6 +30,7 @@ func New(productRepo domain.ProductRepository) domain.ProductUsecase {
 		repo: productRepo,
 	}
 }
+
 //
 //func (bu *bookUsecase) InsertBooks(books *[]domain.Book) (interface{}, error) {
 //
