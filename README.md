@@ -33,3 +33,8 @@ make stop
 # Clean
 make clean
 ```
+
+## Generate Mocks
+```shell
+mockgen -source domain/product_domain.go -destination .mocks/mocks_product_service.go -package mocks
+```
