@@ -4,16 +4,12 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/arangodb/go-driver"
+	"kom-product-service/adapters/arangodb"
 	"kom-product-service/adapters/migration"
 	product_http "kom-product-service/adapters/product/delivery/http"
-	product_repository "kom-product-service/adapters/product/repository/yugapg"
+	product_repository "kom-product-service/adapters/product/repository/arangodb"
 	product_usecase "kom-product-service/adapters/product/usecase"
-	"time"
-
-	"gorm.io/driver/postgres"
-
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 
 	prometheus_http "kom-product-service/adapters/prometheus/handler/http"
 	"os"
@@ -27,7 +23,7 @@ import (
 
 var (
 	cfg    config.Config
-	dbConn *gorm.DB
+	dbConn driver.Database
 	ctx    = context.Background()
 )
 
@@ -43,32 +39,24 @@ func init() {
 		log.Info("Debug mode: true")
 	}
 
-	dbUri := fmt.Sprintf("host=%s port=%d dbname=%s sslmode=disable user=%s password=%s",
-		cfg.GetString("database.yugapg.host"),
-		cfg.GetInt("database.yugapg.port"),
-		cfg.GetString("database.yugapg.name"),
-		cfg.GetString("database.yugapg.username"),
-		cfg.GetString("database.yugapg.password"),
-	)
-
 	var err error
-	dbConn, err = gorm.Open(postgres.Open(dbUri), &gorm.Config{
-		Logger: logger.New(log.New(), logger.Config{
-			SlowThreshold: time.Millisecond,
-			Colorful:      true,
-		}),
+	dbConn, err = arangodb.ArangoUtilize(arangodb.ArangoOptions{
+		Host:     cfg.GetString("database.arangodb.host"),
+		Port:     cfg.GetInt("database.arangodb.port"),
+		Database: cfg.GetString("database.arangodb.name"),
+		Username: cfg.GetString("database.arangodb.username"),
+		Password: cfg.GetString("database.arangodb.password"),
 	})
 	if err != nil {
 		log.Fatal(err)
+		return
 	}
 
 	if *migrate {
-		go func() {
-			log.Info("Migration has been started in another thread...")
+		log.Info("Migration has been started...")
 
-			var result = migration.Migrate(dbConn)
-			log.Info(fmt.Sprintf("Migration end-up with %s", result))
-		}()
+		var result = migration.Migrate(dbConn)
+		log.Info(fmt.Sprintf("Migration end-up with %s", result))
 	}
 }
 
@@ -76,7 +64,7 @@ func main() {
 	var e = echo.New()
 	e.HideBanner = true
 
-	var productRepository = product_repository.New(dbConn)
+	var productRepository = product_repository.New(arangodb.ArangoOpenCollection(dbConn, nil, "product"))
 	var productUCase = product_usecase.New(productRepository)
 	product_http.New(e, productUCase)
 

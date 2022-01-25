@@ -4,6 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"kom-product-service/domain"
 	"net/http"
+	"strconv"
 )
 
 // ProductHandler represent the httphandler for product
@@ -18,7 +19,7 @@ func New(e *echo.Echo, uc domain.ProductUsecase) {
 	}
 	e.GET("/products", handler.Fetch)
 	e.POST("/products", handler.StoreMany)
-	e.PUT("/product", handler.Update)
+	e.PUT("/product/:id", handler.Update)
 	e.DELETE("/product/:id", handler.Delete)
 }
 
@@ -51,12 +52,14 @@ func (p *ProductHandler) StoreMany(c echo.Context) error {
 // Update will update product by given param
 func (p *ProductHandler) Update(c echo.Context) error {
 	var product domain.Product
+	var productId, _ = strconv.Atoi(c.Param("id"))
+
 	err := c.Bind(&product)
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, err.Error())
 	}
 
-	_, err = p.ProductUsecase.UpdateProduct(product)
+	_, err = p.ProductUsecase.UpdateProduct(product, productId)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}

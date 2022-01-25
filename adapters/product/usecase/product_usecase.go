@@ -16,8 +16,8 @@ func (p *productUsecase) ListProduct() (interface{}, error) {
 	return p.repo.Read()
 }
 
-func (p *productUsecase) UpdateProduct(update domain.Product) (interface{}, error) {
-	panic("implement me")
+func (p *productUsecase) UpdateProduct(update domain.Product, id int) (interface{}, error) {
+	return p.repo.Update(update, id)
 }
 
 func (p *productUsecase) DeleteProduct() (interface{}, error) {

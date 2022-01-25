@@ -1,4 +1,4 @@
-package product_repository
+package product_repository_deprecate
 
 import (
 	"gorm.io/gorm"
@@ -27,12 +27,12 @@ func (p *productRepository) Read() (interface{}, error) {
 	return products, p.db.Error
 }
 
-func (p *productRepository) Update(filter, update interface{}) (interface{}, error) {
+func (p *productRepository) Update(update domain.Product, id int) (interface{}, error) {
 	panic("implement me")
 }
 
-func (p *productRepository) Delete(filter interface{}) (interface{}, error) {
-	panic("implement me")
+func (p *productRepository) Delete() (interface{}, error) {
+	return nil, nil
 }
 
 // New will create an object that represent the domain.BookRepository interface

@@ -14,16 +14,16 @@ type Product struct {
 
 // ProductRepository ...
 type ProductRepository interface {
-	CreateMany([]Product) (interface{}, error)
+	CreateMany(products []Product) (interface{}, error)
 	Read() (interface{}, error)
-	Update(filter, update interface{}) (interface{}, error)
-	Delete(filter interface{}) (interface{}, error)
+	Update(update Product, id int) (interface{}, error)
+	Delete() (interface{}, error)
 }
 
 // ProductUsecase ..
 type ProductUsecase interface {
-	InsertProduct([]Product) (interface{}, error)
+	InsertProduct(products []Product) (interface{}, error)
 	ListProduct() (interface{}, error)
-	UpdateProduct(Product) (interface{}, error)
+	UpdateProduct(product Product, id int) (interface{}, error)
 	DeleteProduct() (interface{}, error)
 }

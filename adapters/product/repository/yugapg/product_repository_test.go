@@ -1,4 +1,4 @@
-package product_repository_test
+package product_repository_deprecate_test
 
 //
 //func TestCreateMany(t *testing.T) {

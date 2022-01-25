@@ -4,13 +4,12 @@
     "port": "8080"
   },
   "database": {
-    "yugapg": {
-      "name" : "kom-product",
+    "arangodb": {
+      "name" : "kom_product",
       "host" : "localhost",
-      "port" : 5433,
-      "username" : "yugabyte",
-      "password" : "yugabyte",
-      "ssl_mode" : "disable"
+      "port" : 8529,
+      "username" : "root",
+      "password" : ""
     }
   }
 }
